@@ -1,5 +1,6 @@
 ---
 title: Hello World
+date: 2022-05-17
 categories: 碎碎念
 tags: 测试
 cover: /img/cover3.jpg
