@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>hexo相关命令以及本地文件备份</title>
+      <link href="/2022/05/22/test/"/>
+      <url>/2022/05/22/test/</url>
+      
+        <content type="html"><![CDATA[<p>今天为了整博客的图库差点把博客源文件整没了。恢复以后，尝试了很久在github上备份本地博客文件。参考了以下文章：<br><a href="https://blog.csdn.net/weixin_44861399/article/details/104936907">博客备份与换设备</a></p><p>在这里顺便写点hexo相关命令，防止以后忘记了。</p><h5 id="1-清除和再生成-大概是这个意思吧">1. 清除和再生成 (大概是这个意思吧)</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo clean &amp;&amp; hexo g</span><br></pre></td></tr></table></figure><h5 id="2-部署至github">2. 部署至github</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure><h5 id="3-生成静态地址-本地">3.生成静态地址(本地)</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo s</span><br></pre></td></tr></table></figure><h5 id="4-新建文章">4.新建文章</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new <span class="built_in">test</span></span><br></pre></td></tr></table></figure><h5 id="5-将静态文件推送到master分支">5.将静态文件推送到master分支</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo clean </span><br><span class="line">hexo d -g</span><br></pre></td></tr></table></figure><h5 id="6-将相关更改推送到hexo分支">6.将相关更改推送到hexo分支</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;发表文章test&quot;</span></span><br><span class="line">git push origin hexo</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 博客配置 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 测试 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>我的第一篇文章！！！O(∩_∩)O哈哈~</title>
       <link href="/2022/05/19/firstblogxhw/"/>
       <url>/2022/05/19/firstblogxhw/</url>
