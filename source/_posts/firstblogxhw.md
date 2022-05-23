@@ -31,4 +31,4 @@ hgt500Autumn1979_2020Detrend = temp.sel(time=temp['time.season']=='SON').mean('t
 $y={x^2}$
 $y = {x^2} + 2x - { {\rm{T} }_0} + {\mu ^4}\sqrt { { {\rm{v} }^2} + {b^2} }$
 
-update test
+update test哈哈
