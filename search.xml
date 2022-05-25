@@ -4,11 +4,36 @@
   
     
     <entry>
+      <title>Proplot相关说明及示例</title>
+      <link href="/2022/05/25/proplot/"/>
+      <url>/2022/05/25/proplot/</url>
+      
+        <content type="html"><![CDATA[<h1>前言</h1><p>今天发现一个python模块包: <font color=red> <strong>Proplot</strong></font>。</p><p><a href="https://proplot.readthedocs.io/en/stable/">ProPlot 文档</a></p><p><a href="https://github.com/lukelbd/proplot">Proplot_github</a></p><p>它整合封装了matplotlib，cartopy，basemap。将画图命令精简整合，图窗和轴的排列更加智能整齐，可以说解决了我的很多痛点。但proplot的文档中给出的例子太少，我打算自己做一些例子，帮助自己学会proplot。</p><hr><h1>fig和ax的创建</h1><p>与matplotlib相似，proplot支同时创建fig和ax，或者先创建fig，再逐步添加ax</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> proplt <span class="keyword">as</span> pplt</span><br><span class="line">fig, axs = pplt.subplots()</span><br></pre></td></tr></table></figure><p>需要注意的是，subplots生成的是多个ax, 通过索引axs[0]访问单个ax。</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">fig = pplt.figure()</span><br><span class="line">axs = fig.add_subplots()  <span class="comment"># add several subplots</span></span><br><span class="line">ax = fig.add_subplot()  <span class="comment"># add a single subplot</span></span><br><span class="line"><span class="comment"># axs = fig.subplots()  # shorthand</span></span><br><span class="line"><span class="comment"># ax = fig.subplot()  # shorthand</span></span><br></pre></td></tr></table></figure><p>ax继承了matplotlib中ax的方法和属性（大致看了一下，应该是全部都继承了）。fig也是一样。</p><p>因此proplot几乎可以和matplotlib混用，加入投影参数后也继承了cartopy的方法和属性，同样可以实现混用。不同的是，proplot中ax对象分为三种：Cartesian，AxesGeoAxes，PolarAxes。与matplotlib和cartopy中的名称叫法不同。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 编程 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> proplot </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>hexo相关命令以及本地文件备份</title>
       <link href="/2022/05/22/test/"/>
       <url>/2022/05/22/test/</url>
       
-        <content type="html"><![CDATA[<p>今天为了整博客的图库差点把博客源文件整没了。恢复以后，尝试了很久在github上备份本地博客文件。参考了以下文章：<br><a href="https://blog.csdn.net/weixin_44861399/article/details/104936907">博客备份与换设备</a></p><p>在这里顺便写点hexo相关命令，防止以后忘记了。</p><h5 id="1-清除和再生成-大概是这个意思吧">1. 清除和再生成 (大概是这个意思吧)</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo clean &amp;&amp; hexo g</span><br></pre></td></tr></table></figure><h5 id="2-部署至github">2. 部署至github</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure><h5 id="3-生成静态地址-本地">3.生成静态地址(本地)</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo s</span><br></pre></td></tr></table></figure><h5 id="4-新建文章">4.新建文章</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new <span class="built_in">test</span></span><br></pre></td></tr></table></figure><h5 id="5-将静态文件推送到master分支">5.将静态文件推送到master分支</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo clean </span><br><span class="line">hexo d -g</span><br></pre></td></tr></table></figure><h5 id="6-将相关更改推送到hexo分支">6.将相关更改推送到hexo分支</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;发表文章test&quot;</span></span><br><span class="line">git push origin hexo</span><br></pre></td></tr></table></figure>]]></content>
+        <content type="html"><![CDATA[<p>今天为了整博客的图库差点把博客源文件整没了。恢复以后，尝试了很久在github上备份本地博客文件。参考了以下文章：<br><a href="https://blog.csdn.net/weixin_44861399/article/details/104936907">博客备份与换设备</a></p><p>在这里顺便写点hexo相关命令，防止以后忘记了。</p><h5 id="清除和再生成-大概是这个意思吧">清除和再生成 (大概是这个意思吧)</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo clean &amp;&amp; hexo g</span><br></pre></td></tr></table></figure><h5 id="部署至github">部署至github</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure><h5 id="生成静态地址-本地">生成静态地址(本地)</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo s</span><br></pre></td></tr></table></figure><h5 id="新建文章">新建文章</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new post <span class="built_in">test</span></span><br></pre></td></tr></table></figure><h5 id="将静态文件推送到master分支">将静态文件推送到master分支</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo clean </span><br><span class="line">hexo d -g</span><br></pre></td></tr></table></figure><h5 id="将相关更改推送到hexo分支">将相关更改推送到hexo分支</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;发表文章test&quot;</span></span><br><span class="line">git push origin hexo</span><br></pre></td></tr></table></figure>]]></content>
       
       
       <categories>
