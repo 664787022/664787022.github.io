@@ -10,28 +10,28 @@ category: 博客配置
 
 在这里顺便写点hexo相关命令，防止以后忘记了。
 
-##### 1. 清除和再生成 (大概是这个意思吧)
+##### 清除和再生成 (大概是这个意思吧)
 ```bash
 hexo clean && hexo g
 ```
-##### 2. 部署至github
+##### 部署至github
 ```bash
 hexo d
 ```
-##### 3.生成静态地址(本地)
+##### 生成静态地址(本地)
 ```bash
 hexo s
 ```
-##### 4.新建文章
+##### 新建文章
 ```bash
-hexo new test
+hexo new post test
 ```
-##### 5.将静态文件推送到master分支
+##### 将静态文件推送到master分支
 ```bash
 hexo clean 
 hexo d -g
 ```
-##### 6.将相关更改推送到hexo分支
+##### 将相关更改推送到hexo分支
 ```bash
 git add .
 git commit -m "发表文章test"

@@ -1,7 +1,9 @@
 ---
 title: 壁紙
 date: 2022-05-23 12:52:28
+type: "wallpaper"
 ---
+
 {% gallery %}
 ![](https://i.loli.net/2019/12/25/Fze9jchtnyJXMHN.jpg)
 ![](https://i.loli.net/2019/12/25/ryLVePaqkYm4TEK.jpg)
@@ -11,5 +13,6 @@ date: 2022-05-23 12:52:28
 ![](https://i.loli.net/2019/12/25/E7Jvr4eIPwUNmzq.jpg)
 ![](https://i.loli.net/2019/12/25/mh19anwBSWIkGlH.jpg)
 ![](https://i.loli.net/2019/12/25/2tu9JC8ewpBFagv.jpg)
+![](/gallery/wallpaper/liuhua.png)
 {% endgallery %}
 
