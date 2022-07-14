@@ -19,3 +19,8 @@
       avatar: http://bbs.06climate.com/template/ndsns/style/logo.png
       descr: 气象社区
 
+    - name: Proplot 文档
+      link: https://proplot.readthedocs.io/en/stable/
+      avatar: https://proplot.readthedocs.io/en/stable/_static/logo_square.png
+      descr: Proplot 文档
+
