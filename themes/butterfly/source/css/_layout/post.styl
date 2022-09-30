@@ -16,13 +16,13 @@ beautify()
   h5,
   h6
     transition: all .2s ease-out
-
+# 原来是line-height: 1
     &:before
       position: absolute
       top: calc(50% - 7px)
       color: $title-prefix-icon-color
       content: $title-prefix-icon
-      line-height: 1
+      line-height: 1 
       transition: all .2s ease-out
       @extend .fontawesomeIcon
 

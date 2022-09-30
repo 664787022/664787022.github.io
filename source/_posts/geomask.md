@@ -16,8 +16,6 @@ cover: /img/cover6.png
 
 [<font color=CornflowerBlue>百度网盘：j4d3</font>](https://pan.baidu.com/s/1ExMNF1-yv0OsVg8CH4fbxA)
 
-
-
 ---
 
 ## 代码示例
@@ -313,6 +311,59 @@ codes似乎标记了多边形个体，每个多边形用有一个数字存在cod
 
 由此，我们得到了一个`新的path_clip`，后面的白化过程就与之前的内容完全一致了。如果我们不是用等经纬度投影创建坐标轴，就`需要将路径点的坐标转化到相应的projection上`。
 
+
+
+---
+
+
+
+### 南海小图
+
+有时候在画中国地图时需要对地图右下角添加一个小图来显示南海地区。这个小图可以和主图完全相同，只需要调整`extent`即可。然而，在白化之后会出现如下图的情况。
+
+<img src="https://img-blog.csdnimg.cn/ab137564b9004949a9369f0a022ee972.png" title="" alt="" data-align="center">
+
+小图范围内虽然白化成功，但是小图之外的图像并没有去除掉。原因在于`ax.set_extent()`和`collection.set_clip()`这两个命令相互覆盖了。导致只有一个命令生效。解决的方法就是找到`extent`与`path_clip`的交集。思路来源于：[<font color=CornflowerBlue>链接</font>](https://mp.weixin.qq.com/s?__biz=Mzg4NzY4MzgxNw==&mid=2247488767&idx=1&sn=5df006905b3e16d7cc4a100988393b03&chksm=cf87fb79f8f0726f51ce8bb5c6bde9f8bcf5535bb4ca8db502083c0f9cee26c1a0e90d23bf90&mpshare=1&scene=23&srcid=06234bAPPyrWvy7gJ1FgEOLf&sharer_sharetime=1661769196302&sharer_shareid=327e1b5af213919a0371744eb74c4650#rd) 。我对其代码进行了精简。
+
+```python
+from shapely import geometry as geo
+from cartopy.mpl.patch import geos_to_path,path_to_geos
+
+# proplot添加内嵌坐标轴
+iax = ax.inset([140-11*0.8,10,11*0.8,24*0.8],transform='data')
+
+# 填色图
+fill2 = iax.contourf(lon, lat, o3, extend='both', robust=True)
+iax.add_geometries(shp['geometry'], crs=ccrs.PlateCarree(), facecolor='None', )
+iax.add_geometries(shp2['geometry'], crs=ccrs.PlateCarree(), facecolor='None', )
+
+iax.format(lonlim=(109,120), latlim=(0,24))
+
+extent = [109,120,0,24]
+extentPolygon = geo.Polygon([
+    (extent[0], extent[2]),
+    (extent[0], extent[3]),
+    (extent[1], extent[3]),
+    (extent[1], extent[2]),
+    (extent[0], extent[2]),
+])
+
+# 关键步骤*************
+polygon_clip = []
+for p in path_to_geos(path_clip): # 将 path 转 polygon
+    polygon_clip.append(extentPolygon.intersection(p)) # 将交集填入列表
+
+# 重新将交集 polygon 转为 path
+path_clip2 = Path.make_compound_path(*geos_to_path(polygon_clip))
+[collection.set_clip_path(path_clip2, transform=iax.transData) for collection in fill2.collections]
+```
+
+<img src="https://img-blog.csdnimg.cn/695b33995d694a759b622093d856eeb0.png" title="" alt="" data-align="center">
+
+---
+
+
+
 ## 总结
 
 写了这么多，再回去看看觉得好乱。那就简单做个总结吧。
@@ -365,4 +416,18 @@ tt.set_clip_path(path_clip, transform=ax.transData)
 for text_object in cb:
     if not path_clip.contains_point(text_object.get_position()):
         text_object.set_visible(False) 
+```
+
+`polygon取交集白化`
+
+```python
+# extentPolygon 与 path_clip 取交集
+polygon_clip = []
+for p in path_to_geos(path_clip): # 将 path 转 polygon
+    polygon_clip.append(extentPolygon.intersection(p)) # 将交集填入列表
+
+# 重新将交集 polygon 转为 path
+path_clip2 = Path.make_compound_path(*geos_to_path(polygon_clip))
+[collection.set_clip_path(path_clip2, transform=iax.transData) for collection in fill2.collections]
+
 ```
