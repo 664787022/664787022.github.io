@@ -196,8 +196,8 @@ fft_x=fftfreq(N,T/N)
 
 # [0, 1, 2, 3, -4, -3, -2, -1] 排序调整为
 # [-4, -3, -2, -1, 0, 1, 2, 3]
-fft_x= fftshift(fft_x)
-fft_y= fftshift(fft_y)
+fftshift_x_= fftshift(fft_x)
+fftshift_y= fftshift(fft_y)
 
 # 利用公式计算
 k = np.arange(0,N)
@@ -208,7 +208,7 @@ yy = np.array(yy)
 
 # 画图
 fig, ax = plt.subplots(1,2,figsize=(15,4))
-ax[0].plot(fft_x, abs(fft_y))
+ax[0].plot(fftshift_x, abs(fftshift_y))
 ax[0].set_title('函数计算',fontfamily='SimSun')
 ax[1].plot(k/T, abs(yy))
 ax[1].set_title('公式计算',fontfamily='SimSun')
@@ -224,22 +224,53 @@ ax[1].set_title('公式计算',fontfamily='SimSun')
   
   不论是哪种方法傅里叶变换总是要输出两个量 $a_n$ 和 $b_n$ 。在复频域中则对应实部和虚部 (注意实部与 $a_n$ 可以相差0.5或$N$ 等常数倍数)。第21行和23行使用的是 `abs` 表示对复数取模，即根号下实部的平方加虚部的平方。我认为这种处理是比较合理的，因为实部和虚部同样重要，应该综合考虑其分量的振幅。如果不取模直接用 `matplotlib` ，则只会画出实部。
 
-### ifft 傅里叶逆变换
 
-$
 
-\begin{small}
 
-但是$\displaystyle\frac{1}{a + b}$
 
-$\textstyle\frac{1}{a + b}$
 
-$\frac{1}{a + b}$
 
-$\textstyle N$ 可是 $N$ 
+### ifft 傅里叶逆变换与滤波
 
-\scriptstyle N 可是
+从频域图像中可以看出，频率主要有两个峰值 (四个峰值，其中两个是周期性导致的，看一半即可)。用 `np.argsort()` 获取排序索引找到峰值对应的频率
 
-\end{small}
+```python
+# index[0]与index[1]对应两个相等的最高峰值，相等指的是模相等。其实际数值互为共轭
+# 即实部相等，虚部相反。index[2],index[3] 为两个次高的峰值
+index = np.argsort(abs(fftshift_y))[::-1][0:4]
 
-$
+# 找到峰值对应的频率
+print(fftshift_x[index])
+
+# output: array([-1.57142857,  1.57142857, -2.42857143,  2.42857143])
+```
+
+可以计算一下我们一开始是用角频率为10和15的两个信号叠加的。频率等于角频率除以 2π 所以10/(2π) = 1.59和15/(2π) = 2.39 。这与程序输出结果一致。我们准确的找出了信号中的两个主频率。
+
+利用这一点，我们就可以实现滤波。例如我想去除掉 $cos(15\pi x)$ 这个波。那么我只需要将图像中的那个次高峰变为0即可。因为次高峰对应的频率2.39，也就是角频率15。那么我们只需要
+
+```python
+fftshift_y[index[[2,3]]] = 0
+```
+
+好了，现在频域上我们已经去掉了角频率为15的波，现在需要把频域信号转回时域上。也就是傅里叶逆变换。基本公式也就是公式 (15)。我们将处理好的 $c_n$ 代入公式 (15) 计算出 $y(x)$ 也就完成了逆变换。
+
+在 `Scipy.fft.ifft` 可以帮助我们快速实现这一点。需要注意的是 `ifft` 的输入量只能是 `fft` 和 `fftfreq` 的直接输出量，不能是用 `fftshift` 调整顺序之后的量。
+
+```python
+# 傅里叶逆变换
+ifft_y = ifft(fft_y)
+
+fig2, ax2 = plt.subplots(1,2,figsize=(15,4))
+ax2[0].plot(n, ifft_y, label='ifft')
+ax2[0].plot(n, np.cos(10*n), label='cos(10x)')
+ax2[0].legend()
+
+# 对滤波后的信号再做一次傅里叶变换，检测滤波效果
+ax2[1].plot(fft_x, fft(ifft_y), label='ifft again')
+ax2[1].legend()
+```
+
+<img src="https://img-blog.csdnimg.cn/a0e204a621294c3bb53f8c19727e6d71.jpeg" title="" alt="" data-align="center">
+
+可以看到第一张图，滤波后的曲线与 $cos(10x)$ 的曲线比较接近，几乎没有受到 $cos(15x)$ 的影响，但并不是完全重合。对滤波后的时域信号再做一次傅里叶变换，可以看到峰值只剩一个主峰。但在0附近仍存在一个小峰没有去除掉。这个信号的来源不是很清楚，与离散傅里叶变换的误差有关？
