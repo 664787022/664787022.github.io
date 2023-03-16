@@ -7,6 +7,7 @@ tags:
 category: 
     - 编程
     - 数学
+cover: /img/cover9.jpg
 ---
 
 ## 前言
@@ -176,7 +177,7 @@ N = 1000
 T = 7
 
 # 生成采样点和信号
-n = np.linspace(0,T,N)
+x = np.linspace(0,T,N)
 y = f(x)
 
 # 进行傅里叶变换
@@ -192,18 +193,18 @@ fft_y = fft(y)
 fft_y=fft(y)
 
 # 生成 k， 但实际上生成的是 k/T
-fft_x=fftfreq(N,T/N) 
+fft_x = fftfreq(N,T/N) 
 
 # [0, 1, 2, 3, -4, -3, -2, -1] 排序调整为
 # [-4, -3, -2, -1, 0, 1, 2, 3]
-fftshift_x_= fftshift(fft_x)
-fftshift_y= fftshift(fft_y)
+fftshift_x = fftshift(fft_x)
+fftshift_y = fftshift(fft_y)
 
 # 利用公式计算
 k = np.arange(0,N)
 yy = []
 for i in range(N):
-    yy.append(np.sum(f(n) * np.exp(-2j * np.pi * k[i] * np.arange(N)/N)))
+    yy.append(np.sum(f(x) * np.exp(-2j * np.pi * k[i] * np.arange(N)/N)))
 yy = np.array(yy)
 
 # 画图
@@ -223,12 +224,6 @@ ax[1].set_title('公式计算',fontfamily='SimSun')
   第5行中生成的 `fft_x` 并不是$k$ 而是 $\frac{k}{T}=\frac{k}{7}$ 也就是真正的这个波分量的频率。我们在公式 (14) 中看到的波频率不应该是 $\frac{k}{N}=\frac{k}{1000}$ 吗？因为在编程过程中 $N$ 只是数据的长度，它不具有单位。在公式 (14) 中 $N$ 也是数据的长度，但它实际上是 $\scriptstyle N=N \times d=N \times 1$ 。$d$ 是采样频率，比如我们有1981-2020年的逐日数据，那么$N=40 \times 365,d=1day$。或者 $d=\frac{1}{30}month$ 。因此 `fft_x` 代表的频率其实是 $\frac{k} {T}=\frac{k} {N \times d}=\frac{k} {1000 \times 7/1000}$
   
   不论是哪种方法傅里叶变换总是要输出两个量 $a_n$ 和 $b_n$ 。在复频域中则对应实部和虚部 (注意实部与 $a_n$ 可以相差0.5或$N$ 等常数倍数)。第21行和23行使用的是 `abs` 表示对复数取模，即根号下实部的平方加虚部的平方。我认为这种处理是比较合理的，因为实部和虚部同样重要，应该综合考虑其分量的振幅。如果不取模直接用 `matplotlib` ，则只会画出实部。
-
-
-
-
-
-
 
 ### ifft 傅里叶逆变换与滤波
 
@@ -262,8 +257,8 @@ fftshift_y[index[[2,3]]] = 0
 ifft_y = ifft(fft_y)
 
 fig2, ax2 = plt.subplots(1,2,figsize=(15,4))
-ax2[0].plot(n, ifft_y, label='ifft')
-ax2[0].plot(n, np.cos(10*n), label='cos(10x)')
+ax2[0].plot(x, ifft_y, label='ifft')
+ax2[0].plot(x, np.cos(10*n), label='cos(10x)')
 ax2[0].legend()
 
 # 对滤波后的信号再做一次傅里叶变换，检测滤波效果

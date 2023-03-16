@@ -311,11 +311,7 @@ codes似乎标记了多边形个体，每个多边形用有一个数字存在cod
 
 由此，我们得到了一个`新的path_clip`，后面的白化过程就与之前的内容完全一致了。如果我们不是用等经纬度投影创建坐标轴，就`需要将路径点的坐标转化到相应的projection上`。
 
-
-
 ---
-
-
 
 ### 南海小图
 
@@ -361,8 +357,6 @@ path_clip2 = Path.make_compound_path(*geos_to_path(polygon_clip))
 <img src="https://img-blog.csdnimg.cn/695b33995d694a759b622093d856eeb0.png" title="" alt="" data-align="center">
 
 ---
-
-
 
 ## 总结
 
@@ -429,5 +423,4 @@ for p in path_to_geos(path_clip): # 将 path 转 polygon
 # 重新将交集 polygon 转为 path
 path_clip2 = Path.make_compound_path(*geos_to_path(polygon_clip))
 [collection.set_clip_path(path_clip2, transform=iax.transData) for collection in fill2.collections]
-
 ```
