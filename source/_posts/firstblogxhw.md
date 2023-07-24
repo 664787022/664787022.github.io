@@ -31,7 +31,7 @@ hgt500Autumn1979_2020Detrend = temp.sel(time=temp['time.season']=='SON').mean('t
 
 ### 2. 然后是图片
 
- ![惠](https://img-blog.csdnimg.cn/58bc7bcc25fc4f12856ed93d71c1b945.png#pic_center)
+ ![惠](https://s1.ax1x.com/2023/03/30/pp2EaFA.jpg#pic_center)
 
 ### 3. 试一下公式
 

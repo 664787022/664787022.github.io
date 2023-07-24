@@ -67,11 +67,11 @@ sudo deluser lilei --remove-home
 ls -l
 ```
 
-<img src="https://img-blog.csdnimg.cn/71ff22ee34ef4cb4b37c37104145f512.png" title="" alt="" data-align="center">
+<img src="https://s1.ax1x.com/2023/03/30/pp2Vx4s.png" title="" alt="" data-align="center">
 
-<img src="https://img-blog.csdnimg.cn/img_convert/0a5b24109ff8375c343f00533b98b772.png" title="" alt="" data-align="center">
+<img src="https://s1.ax1x.com/2023/03/30/pp2Zp3q.png" title="" alt="" data-align="center">
 
-<img src="https://img-blog.csdnimg.cn/img_convert/121612b91ffa7c0577d78980249c9d80.png" title="" alt="" data-align="center">
+<img src="https://s1.ax1x.com/2023/03/30/pp2Z9g0.png" title="" alt="" data-align="center">
 
 读权限，表示你可以使用 `cat <file name>` 之类的命令来读取某个文件的内容；写权限，表示你可以编辑和修改某个文件的内容；
 
@@ -96,7 +96,7 @@ chmod 600 iphone11
 ls -alh iphone11
 ```
 
-<img src="https://img-blog.csdnimg.cn/img_convert/7a6097ba186d6053f4705a01321d7bee.png" title="" alt="" data-align="center">
+<img src="https://s1.ax1x.com/2023/03/30/pp2ZmCR.png" title="" alt="" data-align="center">
 
 ---
 

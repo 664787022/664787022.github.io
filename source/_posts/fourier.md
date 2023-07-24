@@ -215,7 +215,7 @@ ax[1].plot(k/T, abs(yy))
 ax[1].set_title('公式计算',fontfamily='SimSun')
 ```
 
-<img src="https://img-blog.csdnimg.cn/0e36cc8f1dc84d078e1c8883cf99cce5.jpeg" title="" alt="" data-align="center">
+<img src="https://s1.ax1x.com/2023/03/30/pp2EDQf.jpg" title="" alt="" data-align="center">
 
 可以看到两种方法计算出的峰值是一样的，只是在x轴是有所不同。图像给出的x轴对应的就是各个波分量的频率。这样看来还是左图更为合理一些，因为 `Nyquist` 频率的概念存在，波的频率不应该超过 $\frac{N}{2}/T=1000/2/7≈71$
 
@@ -266,6 +266,6 @@ ax2[1].plot(fft_x, fft(ifft_y), label='ifft again')
 ax2[1].legend()
 ```
 
-<img src="https://img-blog.csdnimg.cn/a0e204a621294c3bb53f8c19727e6d71.jpeg" title="" alt="" data-align="center">
+<img src="https://s1.ax1x.com/2023/03/30/pp2Ery8.jpg" title="" alt="" data-align="center">
 
 可以看到第一张图，滤波后的曲线与 $cos(10x)$ 的曲线比较接近，几乎没有受到 $cos(15x)$ 的影响，但并不是完全重合。对滤波后的时域信号再做一次傅里叶变换，可以看到峰值只剩一个主峰。但在0附近仍存在一个小峰没有去除掉。这个信号的来源不是很清楚，与离散傅里叶变换的误差有关？

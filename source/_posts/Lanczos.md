@@ -37,7 +37,7 @@ $$
 
 - **为什么会损失数据？** 
   
-  公式 (1) 中 $n$ 最大是N-1, 最小是0。然而 $x$ 的小标为 $n-k$ 。当 $n=0, k=M$ 时，$x_{n-k}=x_{-M}$ , 然而 $x$ 的索引不可能取到负数。因此 $n=0$ 这个点无法通过公式计算出新序列。同样的 $n=0,1,...M-1$ 和 $n=N-M,...,N-1$ 都无法通过公式计算得到新序列值。新序列会比原序列在左端少 $M$ 个，在右端少 $M$ 个，共少 $2M$ 个。(类似于5点滑动平均，左端和右端会各少2个点)。
+  公式 (1) 中 $n$ 最大是N-1, 最小是0。然而 $x$ 的小标为 $n-k$ 。当 $n=0, k=M$ 时，$ x_{n-k}=x_{-M} $ , 然而 $x$ 的索引不可能取到负数。因此 $n=0$ 这个点无法通过公式计算出新序列。同样的 $n=0,1,...M-1$ 和 $n=N-M,...,N-1$ 都无法通过公式计算得到新序列值。新序列会比原序列在左端少 $M$ 个，在右端少 $M$ 个，共少 $2M$ 个。(类似于5点滑动平均，左端和右端会各少2个点)。
   
   以上损失数据的情况在NCL的函数 `filwgts_lanczos` 体现出来。 然而，在我自己进行编程计算的时候发现，如果把原序列看做周期为其自身长度的周期信号，即 $x_{0} = x_{N}, x_{-1}=x_{N-1}$ （傅里叶变换中也用了相似的思想）。这样计算就不会产生数据损失，在序列两端的滤波结果仍具有很好的准确性 (将在下面的程序试验中验证)。
 
@@ -177,7 +177,7 @@ fig, ax = plt.subplots()
 ax.plot(fft_x, Wk)
 ```
 
-<img src="https://img-blog.csdnimg.cn/aa03a00abb9a44ee8e18c99814463eda.png" title="" alt="" data-align="center">
+<img src="https://s1.ax1x.com/2023/03/30/pp2Vy1x.png" title="" alt="" data-align="center">
 
 这就是低通滤波响应函数的图像。可以看到在高频部分 (f>1/7), $W_{k}=0$ 这样通过公式 (13) 将导致新序列在高频部分的频率为0，经过傅里叶逆变换之后，新序列的高频信号就被滤掉了，而只保留了低频部分 (因为 f<1/7的部分 $W_{k}=1$)。
 
@@ -228,7 +228,7 @@ ax.set_ylabel('Amplitude $W_{k}$')
 ax.legend()
 ```
 
-<img src="https://img-blog.csdnimg.cn/cdc0495f89374be7b7469e14ec8bbff0.png" title="" alt="" data-align="center">
+<img src="https://s1.ax1x.com/2023/03/30/pp2VcjK.png" title="" alt="" data-align="center">
 
 图中为 M=20,80,120,240 的情况下 $W_k$ 的曲线，是对 $f=[-1,1]$ 的局部放大。很明显 M 越大， $W_k$ 的最大值维持在1， 最小值维持在0，且0,1之间的转变迅速 (斜率大)。`因此在对不同数据进行滤波时，应该选取合适的 M， 看一下` $W_k$ `是否合理。从滤波效果来说，M 越大越好`
 
@@ -294,7 +294,7 @@ ax[0].plot(n,  y2, label='$w_{k}x_{n-k}$')
 ax[0].legend()
 ```
 
-<img src="https://img-blog.csdnimg.cn/65e99544780147509fd2fbdb9f065392.png" title="" alt="" data-align="center">
+<img src="https://s1.ax1x.com/2023/03/30/pp2V2nO.png" title="" alt="" data-align="center">
 
 蓝线是频谱相乘再傅里叶变换的结果，橙线是周期为7天的波，绿线是直接乘权重系数的结果。可以看出三根线都较为接近，说明滤波起到了很好的效果。`此外，蓝线并没有损失数据，而绿线损失了数据。` 因此可以通过傅里叶变换的方法避免数据的损失，从图中可以看出这种方法保留下的两端的数据仍具有较好的准确性。图中绿线在两端各损失了 $M=240$ 个点，共480个点。`从图中看出蓝线和绿线的最大值都小于1，也就是说滤波后振幅减弱了，这主要是因为 M 的值不够大。`
 
@@ -368,7 +368,7 @@ ax.set_ylabel('Amplitude $W_{k}$')
 ax.legend()
 ```
 
-<img src="https://img-blog.csdnimg.cn/fd943e24903445108fbaaf055b2e1c66.png" title="" alt="" data-align="center">
+<img src="https://s1.ax1x.com/2023/03/30/pp2VWHe.png" title="" alt="" data-align="center">
 
 Gibbs 现象就是在0,1,转换出曲线强烈振荡的现象，与前天相比较。加入了 $\sigma$ 因子很好地减弱了 Gibbs 现象。
 
@@ -503,7 +503,7 @@ ax[1].plot(omega, WL)
 ax[1].set_xlim([-10,10])
 ```
 
-<img src="https://img-blog.csdnimg.cn/0290b702c9784278a76ed6a628f53c7d.png" title="" alt="" data-align="center">
+<img src="https://s1.ax1x.com/2023/03/30/pp2V54A.png" title="" alt="" data-align="center">
 
 图2 是响应函数 $W(\omega)$ 的图像，对比图1 来看这样的响应函数能够很好地完成滤波。在以上代码中将 M 提高到了 800，如果 M=240 则 滤波效果并不很好。`所以在滤波之前一定要对比参考响应函数` $W(\omega)$ 
 
@@ -552,4 +552,4 @@ ax[1].plot(omega, WL)
 ax[1].set_xlim([-10,10])
 ```
 
-<img src="https://img-blog.csdnimg.cn/7fffcec7eed447a7bfb01bb62c8a252b.png" title="" alt="" data-align="center">
+<img src="https://s1.ax1x.com/2023/03/30/pp2Vo9I.png" title="" alt="" data-align="center">

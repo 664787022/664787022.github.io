@@ -61,7 +61,7 @@ ax1.stock_img()
 ax1.plot(lon, lat, '.-r',transform=ccrs.PlateCarree())
 ```
 
-<img src="https://img-blog.csdnimg.cn/e6295dcbfd4a46ceb204abe31d75f7de.png" title="" alt="" data-align="center">
+<img src="https://s1.ax1x.com/2023/03/30/pp2Aoad.png" title="" alt="" data-align="center">
 
 ## Cartopy 连接国外API
 
@@ -117,17 +117,17 @@ class TDT_ter(GoogleWTS):
 
 在网站 [天地图API](http://lbs.tianditu.gov.cn/server/MapService.html) 注册登陆账号。申请密钥：
 
-<img title="" src="https://img-blog.csdnimg.cn/65c411c7d08b45b18ba52e837a8563a3.png" alt="" data-align="center" width="358">
+<img title="" src="https://s1.ax1x.com/2023/03/30/pp2Avqg.png" alt="" data-align="center" width="358">
 
 点击“创建新应用”，内容随便填写
 
-<img title="" src="https://img-blog.csdnimg.cn/ef39262500cd4f10a8823c9318a18109.png" alt="" data-align="center" width="440">
+<img title="" src="https://s1.ax1x.com/2023/03/30/pp2EFzV.png" alt="" data-align="center" width="440">
 
-<img title="" src="https://img-blog.csdnimg.cn/968cd3f229054f5b8a7e0b193e255ab5.png" alt="" data-align="center" width="337">
+<img title="" src="https://s1.ax1x.com/2023/03/30/pp2EEsU.png" alt="" data-align="center" width="337">
 
 然后就得到密钥了：
 
-<img title="" src="https://img-blog.csdnimg.cn/0d9c7a0cdea6409fad21fd256af03e44.png" alt="" data-align="center" width="477">
+<img title="" src="https://s1.ax1x.com/2023/03/30/pp2EeZ4.png" alt="" data-align="center" width="477">
 
 如果不想申请密钥，可以用我以前的密钥，就是`imh_tiles.py`中已经填好的，key = 'f51d7378813e172b83c8edc7ddedb1c9'。但是这个申请的不知道什么时候可能会失效。
 
@@ -169,4 +169,4 @@ for i in range(3):
     ax3[i].plot(lon, lat, '.-r',transform=ccrs.PlateCarree())
 ```
 
-<img src="https://img-blog.csdnimg.cn/91152be5da344cb0a00ac5d601f7f569.png" title="" alt="" data-align="center">
+<img src="https://s1.ax1x.com/2023/03/30/pp2EmdJ.png" title="" alt="" data-align="center">
