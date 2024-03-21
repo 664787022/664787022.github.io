@@ -1,0 +1,338 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>CESM的安装及运行 | XHW's Blog</title><meta name="keywords" content="Linux,软件"><meta name="author" content="XHW"><meta name="copyright" content="XHW"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="关于CESM的安装   总的过程下来，安装的问题基本出在 config_machines.xml 和 config_compilers.xml 上。 对于这两个文件一定要根据自己的机器情况进行设置。   除此之外，在安装过程中，库的依赖库需要统一。例如在编译 esmf 时使用的是 mpich , 而在配置CESM时，我设置的是 openmpi。 这就导致在 .&#x2F;case.build 中出现 mct">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CESM的安装及运行">
+<meta property="og:url" content="http://example.com/2024/03/21/CESM/index.html">
+<meta property="og:site_name" content="XHW&#39;s Blog">
+<meta property="og:description" content="关于CESM的安装   总的过程下来，安装的问题基本出在 config_machines.xml 和 config_compilers.xml 上。 对于这两个文件一定要根据自己的机器情况进行设置。   除此之外，在安装过程中，库的依赖库需要统一。例如在编译 esmf 时使用的是 mpich , 而在配置CESM时，我设置的是 openmpi。 这就导致在 .&#x2F;case.build 中出现 mct">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/cover20.png">
+<meta property="article:published_time" content="2024-03-21T03:17:00.000Z">
+<meta property="article:modified_time" content="2024-03-21T03:26:56.183Z">
+<meta property="article:author" content="XHW">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="软件">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/cover20.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2024/03/21/CESM/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: '/pluginsSrc/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: '/pluginsSrc/flickr-justified-gallery/dist/fjGallery.css'
+    }
+  },
+  isPhotoFigcaption: true,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'CESM的安装及运行',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-03-21 11:26:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.2.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/maomi.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">19</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">16</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">9</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-image"></i><span> gallery</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/cover20.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">XHW's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-image"></i><span> gallery</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">CESM的安装及运行</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2024-03-21T03:17:00.000Z" title="Created 2024-03-21 11:17:00">2024-03-21</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2024-03-21T03:26:56.183Z" title="Updated 2024-03-21 11:26:56">2024-03-21</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93/">经验总结</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="CESM的安装及运行"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="关于CESM的安装">关于CESM的安装</h2>
+<ul>
+<li>
+<p>总的过程下来，安装的问题基本出在 <code>config_machines.xml</code> 和 <code>config_compilers.xml</code> 上。 对于这两个文件一定要根据自己的机器情况进行设置。</p>
+</li>
+<li>
+<p>除此之外，在安装过程中，库的依赖库需要统一。例如在编译 <code>esmf</code> 时使用的是 <code>mpich</code> , 而在配置CESM时，我设置的是 <code>openmpi</code>。 这就导致在 <code>./case.build</code> 中出现 <code>mct</code> 等报错问题，最后我删除了<code>esmf</code> 用<code>openmpi</code> 重新编译解决了问题。 应该把CESM所有的库，以及这些库的依赖库都统一起来 (类似的还有<code>pnetcdf</code> 也应该统一成用<code>openmpi</code> 编译)。</p>
+</li>
+<li>
+<p>另一个问题是网络问题，不过是在<code>./manage_externals/checkout_externals</code> 还是 <code>./case.submit</code> 都需要从网络下载一些文件。然而网络被墙，这些步骤频繁失败。解决方案可以是在本地开启<code>Clash</code> 代理，然后在<code>linux</code> 中开启使用本地的代理，从而让<code>linux</code> 连上本地开启的VPN。</p>
+</li>
+<li>
+<p>还有一个关于Lapack的问题。这个库的编译参照<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/520848641">linux关于blas、lapack的安装和使用 - 知乎 (zhihu.com)</a> 但安装好在./case.build会出现类似<code>glam_strs2.F90:(.text+0x888): undefined reference to dcopy_</code> 的报错。主要是因为在gcc编译中链接库的顺序问题。解决方案是在config_compilers.xml的<code>&lt;SLIBS&gt;</code>中添加 <code> &lt;append&gt;-L/disk1/xhw/libs/lapack/lib -llapacke -llapack -lcblas -lrefblas -lm -lgfortran&lt;/append&gt;</code></p>
+</li>
+<li>
+<p>build时报错 <code>relocation truncated to fit r_x86_64_32s against .data'</code> 。由于编译内存不足需要增加内存，在 <code>config_compilers.xml</code> 的 <code>FFLAGS</code> 里添加 <code>-mcmodel=medium</code>。<a target="_blank" rel="noopener" href="https://blog.csdn.net/ai297313/article/details/42711837">GCC 编译错误 relocation truncated to fit: R_X86_64_32S against `.bss’_relocation truncated to fit 错误-CSDN博客</a></p>
+</li>
+<li>
+<p>submit后运行中断并报错<code>prterun noticed that process rank 2 with PID 313682 on node charney exited on signal 11 (Segmentation fault)</code>.原因是编译参数限制了堆栈的大小，不利于并行计算。输入<code>ulimit -s unlimited</code> 解决。<a target="_blank" rel="noopener" href="https://muchong.com/html/201308/6230859.html">并行计算错误提示 - 第一原理 - 小木虫 - 学术 科研 互动社区 (muchong.com)</a></p>
+</li>
+<li>
+<p>./case.submit后 <code>ERROR: No result from jobs [('case.run', None), ('case.st_archive', 'case.run or case.test')]</code> 。一方面case默认跑5天，但以月平均输出。由于5天run不足以输出月平均，所以就<code>no result</code>。可以修改<code>./xmlchange STOP_N=1,STOP_OPTION=nmonths</code>。另一方面即使修改了运行时长，如果你的机器没有batch（任务调度系统），那么仍然会输出这个错误。但在<code>archive</code>里可以找到运行输出的历史文件，这样的情况下可以忽视这个报错。[<a target="_blank" rel="noopener" href="https://bb.cgd.ucar.edu/cesm/threads/case-submit-error-error-no-result-from-jobs-case-run-none-case-st_archive-case-run-or-case-test.5740/#post-38647">case.submit error] ERROR: No result from jobs [(‘case.run’, None), (‘case.st_archive’, ‘case.run or case.test’)] | DiscussCESM Forums (ucar.edu)</a></p>
+</li>
+<li>
+<p>一开始我使用的是系统自带的gcc，然后编译安装了一系列库。后来在编译运行CESM时，出现一些报错，发现可能是gcc版本太低导致的。于是我自己编译安装了高版本的gcc。这样的情况下，需要重新编译安装之前版本gcc编译的库，否则会出现类似<code>come from different version of gcc</code> 的错误。另外，自己编译安装gcc在某个文件夹下后，需要手动修改所有<code>gcc/lib64/*.la</code> 的<code>libdir='$gcc/lib64'</code>和<code>dependency_libs</code></p>
+</li>
+</ul>
+<h2 id="CESM-文件夹结构">CESM 文件夹结构</h2>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/pF2IJVU"><img src="https://s21.ax1x.com/2024/03/17/pF2IJVU.md.jpg" alt="pF2IJVU.md.jpg"></a></p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/pF2I1K0"><img src="https://s21.ax1x.com/2024/03/17/pF2I1K0.png" alt="pF2I1K0.png"></a></p>
+<h2 id="CASE的建立到提交">CASE的建立到提交</h2>
+<p>新建case</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> <span class="variable">$HOME</span>/CESM/cime/scripts/</span><br><span class="line"></span><br><span class="line">./create_newcase --<span class="keyword">case</span> <span class="variable">$HOME</span>/CESM/cases/CASE --res RES --compset COMPSET --Mach myMach</span><br></pre></td></tr></table></figure>
+<p>Setup</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./case.setup</span><br></pre></td></tr></table></figure>
+<p>build</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./case.build</span><br></pre></td></tr></table></figure>
+<p>提交</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./case.submit</span><br></pre></td></tr></table></figure>
+<p>关于case的运行过程被记录在 <code>CaseStatus</code> 文件中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd $HOME/CESM/cime/scripts/casename/CaseStatus</span><br></pre></td></tr></table></figure>
+<h2 id="修改、查询-xml">修改、查询.xml</h2>
+<p>-p 可以<strong>模糊查询</strong>名为<code>JOB_WALLCLOCK_TIME</code> 的变量设置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./xmlquery -p WALLCLOCK</span><br></pre></td></tr></table></figure>
+<p>修改允许时长</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./xmlchange STOP_N=1,STOP_OPTION=nmonths</span><br></pre></td></tr></table></figure>
+<p>修改（在./case.setup之前）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./xmlchange CONTINUE_RUN=TRUE</span><br></pre></td></tr></table></figure>
+<p>或者直接修改 <code>env_run.xml</code></p>
+<h2 id="namelist">namelist</h2>
+<p>namelist文件在 <code>$CASEROOT</code> 里，CAM模块的namelist名为 <code>user_nl_cam</code></p>
+<p>主要用于设置输出哪些变量，每几小时一平均，每个文件塞几个时次的变量</p>
+<ul>
+<li><strong><code>nhtfrq</code></strong>: 输出频率</li>
+<li><strong><code>mfilt</code></strong>: 每个文件塞的时次数</li>
+<li><strong><code>fincl</code></strong>: 额外增添一些变量</li>
+</ul>
+<p><code>nhtfrq</code></p>
+<p><code>nhtfrq=0</code> 表示月平均输出，<code>nhtfrq&gt;0</code>按时间步长输出，<code>nhtfrq&lt;0</code>按小时输出</p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nhtfrq = -<span class="number">24</span>  <span class="comment">! 逐日(24小时)</span></span><br><span class="line">nhtfrq = -<span class="number">3</span>  <span class="comment">! 逐3小时输出</span></span><br></pre></td></tr></table></figure>
+<p><code>mfilt</code></p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">! 逐日输出，每个文件里有365个时次</span></span><br><span class="line">nhtfrq = -<span class="number">24</span>   </span><br><span class="line">mfilt = <span class="number">365</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Note: 对于逐月输出的情况，设置mfilt无效. For monthly frequency, we always have: <code>mfilt = 1</code>。 每个月作为一个文件是上限？不存在12个月为一个文件的情况？</p>
+</blockquote>
+<p><code>fincl</code></p>
+<p>输出的历史文件的文件名会带有**<code>h0</code>**, <strong><code>h1</code></strong>, …, **<code>h9</code>**字段，一共至多有十个。<code>h0</code> 是默认输出的，带有这个字段的文件会输出模式默认输出的变量。如果我想增加几个变量输出，我可以进行一些设置<code>fincl2='xxx'</code>，这些变量会出现在<code>h1</code>字段的文件中。<code>fincl3</code> 控制<code>h2</code> …</p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">! 在h0中以月平均输出默认变量。在h1中以逐小时输出UVT三个变量，十个小时为一个文件。在h2中以逐24小时输出UVT，十个小时为一个文件</span></span><br><span class="line">nhtfrq = <span class="number">0</span>, -<span class="number">1</span>, -<span class="number">24</span> </span><br><span class="line">mfilt = <span class="number">1</span>, <span class="number">10</span>, <span class="number">10</span> </span><br><span class="line">fincl2 = <span class="string">&#x27;U&#x27;</span>, <span class="string">&#x27;V&#x27;</span>, <span class="string">&#x27;T&#x27;</span> </span><br><span class="line">fincl3 = <span class="string">&#x27;PRECT&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>默认情况是做平均输出，例如逐小时平均，逐24小时平均。可以通过添加flags变逐小时输出瞬时量。</p>
+<ul>
+<li><strong><code>A</code></strong> ==&gt; Average</li>
+<li><strong><code>B</code></strong> ==&gt; GMT 00:00:00 average</li>
+<li><strong><code>I</code></strong> ==&gt; Instantaneous</li>
+<li><strong><code>M</code></strong> ==&gt; Minimum</li>
+<li><strong><code>X</code></strong> ==&gt; Maximum</li>
+<li><strong><code>L</code></strong> ==&gt; Local-time</li>
+<li><strong><code>S</code></strong> ==&gt; Standard deviation</li>
+</ul>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">! 逐月平均输出默认变量。在h1中，每3小时输出TQUV的瞬时量</span></span><br><span class="line">fincl2   = <span class="string">&#x27;T:I&#x27;</span>,<span class="string">&#x27;Q:I&#x27;</span>,<span class="string">&#x27;U:I&#x27;</span>,<span class="string">&#x27;V:I&#x27;</span></span><br><span class="line">nhtfrq   = <span class="number">0</span>, -<span class="number">3</span> </span><br><span class="line">mfilt   = <span class="number">1</span>, <span class="number">8</span></span><br></pre></td></tr></table></figure>
+<p>以上是CAM模块里的设置方法，对于海洋、陆面等模块的设置方法略有不同，参见 <a target="_blank" rel="noopener" href="https://ncar.github.io/CESM-Tutorial/notebooks/namelist/output/output_cam.html">Customize CAM output — CESM Tutorial (ncar.github.io)</a></p>
+<h1>附录</h1>
+<h2 id="case-命名规则">case 命名规则</h2>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/pF2IORs"><img src="https://s21.ax1x.com/2024/03/17/pF2IORs.png" alt="pF2IORs.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cesm.ucar.edu/models/cesm2/naming-conventions">Naming Conventions | Community Earth System Model (ucar.edu)</a></p>
+<h2 id="集群、节点、核心、任务">集群、节点、核心、任务</h2>
+<p>集群：相当于一个机房，机房里有很多计算机。这些计算机的集合就是集群</p>
+<p>节点：机房里的每个计算机相当于节点</p>
+<p>核心：每个计算机的处理器核心</p>
+<p>任务：例如跑一次CESM实验就是一次任务，这个任务可以拆分成若干小任务，每个小任务分配给核心。</p>
+<h2 id="关于NTASKS，PES，MPITASK">关于NTASKS，PES，MPITASK</h2>
+<p>XML设置中有若干设置并行计算的变量。经过一番探索初步摸清了它们的意义</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">表头</th>
+<th>表头</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">MAX_MPITASKS_PER_NODE</td>
+<td>每个节点上<code>MPI task</code><strong>的最大数量</strong>。也可以在<code>config_machines.xml</code>里设置。</td>
+</tr>
+<tr>
+<td style="text-align:left">MAX_TASKS_PER_NODE</td>
+<td>所有分量每个节点上<code>(MPI tasks) * (threads)</code> 的总和。必须大于等于 <code>MAX_MPITASKS_PER_NODE</code>。也可以在 <code>config_machines.xml</code> 里设置。</td>
+</tr>
+<tr>
+<td style="text-align:left">NTASKS</td>
+<td>每个分量的<code>MPI task</code>数</td>
+</tr>
+<tr>
+<td style="text-align:left">NTHRDS</td>
+<td>每个分量每个任务的<code>threads</code>数。必须大于等于1。如果等于1，表示对应分量的并行关闭。</td>
+</tr>
+<tr>
+<td style="text-align:left">ROOTPE</td>
+<td><code>MPI task</code> 任务编号。</td>
+</tr>
+</tbody>
+</table>
+<p>对于一个case，如果</p>
+ <figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">NTASKS_ATM = <span class="number">16</span></span><br><span class="line">NTHRDS_ATM = <span class="number">4</span></span><br><span class="line">ROOTPE_ATM = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">NTASKS_OCN = <span class="number">64</span></span><br><span class="line">NTHRDS_OCN = <span class="number">1</span></span><br><span class="line">ROOTPE_OCN = <span class="number">16</span></span><br></pre></td></tr></table></figure>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/pFWvGCt"><img src="https://s21.ax1x.com/2024/03/20/pFWvGCt.png" alt="pFWvGCt.png"></a></p>
+<p>从上图可以知道程序实际只用了80个tasks，那么程序会向服务器申请80个tasks和128个pes处理器。前16个task用于处理atm，每个task由4个pes负责计算。后64个tasks用于处理ocn，每个task由1个pes负责计算。</p>
+<p>这80个tasks的是没有重叠的，atm和ocn同时计算。如果ROOTPE_OCN=0, 那么前16个task就是和atm重叠的，ocn的前16个task需要等atm计算完成才能开始计算。</p>
+<p>如果这时候 <code>ROOTPE_OCN = 64</code></p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/pFWzGX8"><img src="https://s21.ax1x.com/2024/03/20/pFWzGX8.png" alt="pFWzGX8.png"></a></p>
+<p>由于ocn的task编号从64开始，导致atm和ocn之间有48个task和pes不会被使用，但这些仍然由程序向服务器申请下来。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="http://example.com">XHW</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2024/03/21/CESM/">http://example.com/2024/03/21/CESM/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Linux/">Linux</a><a class="post-meta__tags" href="/tags/%E8%BD%AF%E4%BB%B6/">软件</a></div><div class="post_share"><div class="social-share" data-image="/img/cover20.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="/pluginsSrc/butterfly-extsrc/ShareJS/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="/pluginsSrc/butterfly-extsrc/ShareJS/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2024/03/08/atmosKnowledge/"><img class="next-cover" src="/img/cover19.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">气象知识随笔</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2023/12/29/LBM/" title="LBM 安装-运行-修改-debug"><img class="cover" src="/img/cover18.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-29</div><div class="title">LBM 安装-运行-修改-debug</div></div></a></div><div><a href="/2022/07/11/linux/" title="Linux 操作"><img class="cover" src="/img/cover7.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-07-11</div><div class="title">Linux 操作</div></div></a></div><div><a href="/2023/09/04/SomeSoftwares/" title="一些装机软件"><img class="cover" src="/img/cover15.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-04</div><div class="title">一些装机软件</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/maomi.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">XHW</div><div class="author-info__description">甚矣，汝之不惠</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">19</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">16</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E4%BA%8ECESM%E7%9A%84%E5%AE%89%E8%A3%85"><span class="toc-number">1.</span> <span class="toc-text">关于CESM的安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CESM-%E6%96%87%E4%BB%B6%E5%A4%B9%E7%BB%93%E6%9E%84"><span class="toc-number">2.</span> <span class="toc-text">CESM 文件夹结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CASE%E7%9A%84%E5%BB%BA%E7%AB%8B%E5%88%B0%E6%8F%90%E4%BA%A4"><span class="toc-number">3.</span> <span class="toc-text">CASE的建立到提交</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E3%80%81%E6%9F%A5%E8%AF%A2-xml"><span class="toc-number">4.</span> <span class="toc-text">修改、查询.xml</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#namelist"><span class="toc-number">5.</span> <span class="toc-text">namelist</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number"></span> <span class="toc-text">附录</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#case-%E5%91%BD%E5%90%8D%E8%A7%84%E5%88%99"><span class="toc-number">1.</span> <span class="toc-text">case 命名规则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9B%86%E7%BE%A4%E3%80%81%E8%8A%82%E7%82%B9%E3%80%81%E6%A0%B8%E5%BF%83%E3%80%81%E4%BB%BB%E5%8A%A1"><span class="toc-number">2.</span> <span class="toc-text">集群、节点、核心、任务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E4%BA%8ENTASKS%EF%BC%8CPES%EF%BC%8CMPITASK"><span class="toc-number">3.</span> <span class="toc-text">关于NTASKS，PES，MPITASK</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/03/21/CESM/" title="CESM的安装及运行"><img src="/img/cover20.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="CESM的安装及运行"/></a><div class="content"><a class="title" href="/2024/03/21/CESM/" title="CESM的安装及运行">CESM的安装及运行</a><time datetime="2024-03-21T03:17:00.000Z" title="Created 2024-03-21 11:17:00">2024-03-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/03/08/atmosKnowledge/" title="气象知识随笔"><img src="/img/cover19.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="气象知识随笔"/></a><div class="content"><a class="title" href="/2024/03/08/atmosKnowledge/" title="气象知识随笔">气象知识随笔</a><time datetime="2024-03-08T01:30:50.000Z" title="Created 2024-03-08 09:30:50">2024-03-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/12/29/LBM/" title="LBM 安装-运行-修改-debug"><img src="/img/cover18.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="LBM 安装-运行-修改-debug"/></a><div class="content"><a class="title" href="/2023/12/29/LBM/" title="LBM 安装-运行-修改-debug">LBM 安装-运行-修改-debug</a><time datetime="2023-12-29T01:42:13.000Z" title="Created 2023-12-29 09:42:13">2023-12-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/11/19/ncview/" title="ncview安装和踩坑"><img src="/img/cover17.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ncview安装和踩坑"/></a><div class="content"><a class="title" href="/2023/11/19/ncview/" title="ncview安装和踩坑">ncview安装和踩坑</a><time datetime="2023-11-19T11:06:01.000Z" title="Created 2023-11-19 19:06:01">2023-11-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/11/15/dataDownload/" title="各类网站数据下载"><img src="/img/cover16.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="各类网站数据下载"/></a><div class="content"><a class="title" href="/2023/11/15/dataDownload/" title="各类网站数据下载">各类网站数据下载</a><time datetime="2023-11-15T12:08:01.000Z" title="Created 2023-11-15 20:08:01">2023-11-15</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/img/tianqizhizi.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By XHW</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox.umd.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('/pluginsSrc/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (true){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.2
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container:not\([display]\)').forEach(node => {
+            const target = node.parentNode
+            if (target.nodeName.toLowerCase() === 'li') {
+              target.parentNode.classList.add('has-jax')
+            } else {
+              target.classList.add('has-jax')
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = '/pluginsSrc/mathjax/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
