@@ -4,6 +4,7 @@ date: 2022-07-11 16:50:38
 tags: Linux
 category: Linux
 cover: /img/cover7.png
+sticky: 2
 ---
 
 ## 前言
@@ -231,8 +232,6 @@ find . -name "*.c"
 > 
 > 此外还有 `locate`, `which`, `whereis` 等查找命令，不细说了
 
----
-
 ## 文件压缩与解压
 
 - zip 解压
@@ -336,3 +335,40 @@ find . -name "*.c"
   tar -xf something.tar # 解包
   # 指定路径：-C 参数
   ```
+
+## 运行程序
+
+**后台**运行脚本 `CMAhgt.py` 把结果(包括报错信息) 输出到 `CMAhgt.out` 里
+
+```shell
+nohup python CMAhgt.py > CMAhgt.out 2>&1 &
+```
+
+## 查看内存、储存
+
+```shell
+# 查看当前内存（运行内存）
+free -h
+
+# 查看当前目录下所有文件的大小（包括文件夹）
+du -sh *
+
+#查看系统磁盘储存剩余量
+df -h
+```
+
+## 查找文件
+
+```bash
+find / -name 'libnetcdf.so.19*'
+```
+
+## slurm调度系统
+
+```bash
+# 查看任务信息
+sacct --format=JobID,JobName,Start,End,Elapsed,AllocCPUS,State,Partition
+
+# 查看运行中的任务
+squeue
+```

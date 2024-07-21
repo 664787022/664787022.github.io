@@ -13,6 +13,10 @@ menu:
   # Link: /link/ || fas fa-link
   # About: /about/ || fas fa-heart
   Home: / || fas fa-home
+  Article|| fas fa-heart: 
+    CESM: /2024/03/21/CESM/ || fas fa-heart
+    Linux: /2022/07/11/linux/ || fas fa-heart
+    vscode计算节点: /2024/04/24/computeNode/ || fas fa-heart
   Archives: /archives/ || fas fa-archive
   Categories: /categories/ || fas fa-folder-open
   Tags: /tags/ || fas fa-tags
@@ -22,6 +26,7 @@ menu:
     Movie: /movies/ || fas fa-video
   Link: /link/ || fas fa-link
   About: /about/ || fas fa-heart
+
 
 
 # Code Blocks (代碼相關)
